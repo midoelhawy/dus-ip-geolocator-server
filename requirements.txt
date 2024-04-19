@@ -1,3 +1,4 @@
 ipaddress==1.0.23
-flask
-maxminddb
+flask==3.0.1
+maxminddb==2.6.0
+waitress==3.0.0
