@@ -59,6 +59,6 @@ class DBHandler:
         data = []
         for ip in ips:
             data.append(self.resolve_ip(ip))
-
+        return data
                 
  
