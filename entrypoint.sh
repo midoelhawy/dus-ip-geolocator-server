@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ./scripts/download-latest-mmdb.sh
-python main.py
+python3 main.py
