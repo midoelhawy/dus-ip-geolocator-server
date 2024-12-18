@@ -1,5 +1,5 @@
 #!/bin/sh
-latestDbVersion="https://github.com/midoelhawy/ripe-db-ip-parser/releases/latest/download/db.sqlite.zip"
+latestDbVersion="https://github.com/midoelhawy/global-geo-ip-database-generator/releases/latest/download/db.sqlite.zip"
 destination="db"
 force="false"
 
@@ -20,7 +20,7 @@ compare_versions() {
     return 1
 }
 
-github_api_url="https://api.github.com/repos/midoelhawy/ripe-db-ip-parser/releases/latest"
+github_api_url="https://api.github.com/repos/midoelhawy/global-geo-ip-database-generator/releases/latest"
 latest_version=$(curl -s $github_api_url | jq -r '.tag_name')
 
 
