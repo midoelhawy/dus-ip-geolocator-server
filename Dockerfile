@@ -3,9 +3,15 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
+RUN apt update && apt install wget curl jq -y
+RUN mkdir -p db 
+
 COPY requirements.txt .
+COPY lib lib
 COPY main.py .
 COPY scripts/download-latest-mmdb.sh ./scripts/
+RUN ./scripts/download-latest-mmdb.sh
+
 
 RUN pip install --no-cache-dir -r requirements.txt
 

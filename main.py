@@ -1,9 +1,11 @@
+import os
 from flask import Flask, request, jsonify
 from waitress import serve
 import logging
 import sys
 from functools import wraps
-
+root_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(root_dir, 'lib'))
 from lib.db import DBHandler
 
 app = Flask(__name__)

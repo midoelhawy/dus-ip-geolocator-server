@@ -1,5 +1,5 @@
 #!/bin/sh
-latestDbVersion="https://github.com/midoelhawy/ripe-db-ip-parser/releases/latest/download/ASN_COUNTRY_AND_CITY.mmdb"
+latestDbVersion="https://github.com/midoelhawy/global-geo-ip-database-generator/releases/latest/download/ASN_COUNTRY_AND_CITY.mmdb"
 destination="db"
 force="false"
 
@@ -26,9 +26,10 @@ compare_versions() {
     return 1
 }
 
-github_api_url="https://api.github.com/repos/midoelhawy/ripe-db-ip-parser/releases/latest"
+github_api_url="https://api.github.com/repos/midoelhawy/global-geo-ip-database-generator/releases/latest"
 latest_version=$(curl -s $github_api_url | jq -r '.tag_name')
 
+echo "$latest_version" > latest_version.txt
 
 current_version=$(cat current_db_version.txt)
 if [ -z "$current_version" ]; then
@@ -47,6 +48,7 @@ fi
 
 if [ ! -f "$destination/db.mmdb" ] || [ "$force" = "true" ]; then
     wget -O "$destination/db.mmdb" "$latestDbVersion"
+    echo "$latest_version" > current_db_version.txt
 
 else
     echo "File already exists in $destination. Use --force to download again."
