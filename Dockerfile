@@ -10,7 +10,7 @@ COPY requirements.txt .
 COPY lib lib
 COPY main.py .
 COPY scripts/download-latest-mmdb.sh ./scripts/
-RUN ./scripts/download-latest-mmdb.sh
+
 
 
 RUN pip install --no-cache-dir -r requirements.txt
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY entrypoint.sh .
 
 RUN chmod +x entrypoint.sh
+RUN ./scripts/download-latest-mmdb.sh
 
 EXPOSE 5000
-
 CMD ["./entrypoint.sh"]
