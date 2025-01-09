@@ -45,5 +45,16 @@ def geolocate_multiple_ips():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+@app.route('/version', methods=['GET'])
+@log_requests
+def get_version():
+    try:
+        version = "unknown"
+        with open('current_db_version.txt', 'r') as f:
+            version = f.read().strip()
+        return jsonify({'version': version}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
 if __name__ == '__main__':
     serve(app, host='0.0.0.0', port=5000)
