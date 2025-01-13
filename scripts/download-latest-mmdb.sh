@@ -1,5 +1,6 @@
 #!/bin/sh
 latestDbVersion="https://github.com/midoelhawy/global-geo-ip-database-generator/releases/latest/download/ASN_COUNTRY_AND_CITY.mmdb"
+latestASNDatabase="https://github.com/midoelhawy/global-geo-ip-database-generator/releases/latest/download/asn_database.sqlite"
 destination="db"
 force="false"
 
@@ -52,4 +53,13 @@ if [ ! -f "$destination/db.mmdb" ] || [ "$force" = "true" ]; then
 
 else
     echo "File already exists in $destination. Use --force to download again."
+fi
+
+
+if [ ! -f "$destination/asn_database.sqlite" ] || [ "$force" = "true" ]; then
+    wget -O "$destination/asn_database.sqlite" "$latestASNDatabase"
+    #echo "$latest_version" > current_db_version.txt
+
+else
+    echo "File already asn_database.sqlite exists in $destination. Use --force to download again."
 fi
