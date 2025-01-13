@@ -1,14 +1,18 @@
 import ipaddress
 from pathlib import Path
-
+import sqlite3
 import maxminddb
 
 class DBHandler:
     db_path:str = str(Path.joinpath(Path(__file__).parent.parent,'db/db.mmdb'));
+    asn_db_path:str = str(Path.joinpath(Path(__file__).parent.parent,'db/asn_database.sqlite'));
     reader:maxminddb.Reader
+    #asn_db: sqlite3.Connection
     db_version: "Unknown"
     def __init__(self):
         self.reader = maxminddb.open_database(self.db_path)
+
+        # self.asn_db = 
         versionFilePath = str(Path.joinpath(Path(__file__).parent.parent,'current_db_version.txt'));
         try:
             with open(versionFilePath, 'r') as f:
@@ -73,4 +77,40 @@ class DBHandler:
             data.append(self.resolve_ip(ip))
         return data
                 
- 
+    def resolve_asn(self, asn_number):
+        try:
+            asn_db = sqlite3.connect(self.asn_db_path)
+            cursor = asn_db.cursor()
+            cursor.execute("SELECT asn_number, asn_name, asn_country_code FROM asn_data WHERE asn_number = ?", (asn_number,))
+            result = cursor.fetchone()
+            if result:
+                result = dict(zip(['asn_number', 'asn_name', 'asn_country_code'], result))
+        except sqlite3.Error as e:
+            print(f"Database error: {e}")
+            result = None
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            result = None
+        finally:
+            if 'asn_db' in locals():
+                asn_db.close()
+        return result
+
+    def resolve_multiple_asns(self, asn_numbers):
+        try:
+            asn_db = sqlite3.connect(self.asn_db_path)
+            cursor = asn_db.cursor()
+            query = f"SELECT asn_number, asn_name, asn_country_code FROM asn_data WHERE asn_number IN ({','.join('?' for _ in asn_numbers)})"
+            cursor.execute(query, asn_numbers)
+            results = cursor.fetchall()
+            results = [dict(zip(['asn_number', 'asn_name', 'asn_country_code'], row)) for row in results]
+        except sqlite3.Error as e:
+            print(f"Database error: {e}")
+            results = []
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            results = []
+        finally:
+            if 'asn_db' in locals():
+                asn_db.close()
+        return results

@@ -23,6 +23,35 @@ def log_requests(func):
         return response
     return wrapper
 
+@app.route('/', methods=['GET'])
+@log_requests
+def home():
+    return jsonify({'message': 'Welcome to the IP Geolocator API'}), 200
+
+
+
+@app.route('/asn/<asn>', methods=['GET'])
+@log_requests
+def get_asn_info(asn):
+    try:
+        result = db.resolve_asn(asn)
+        if result:
+            return jsonify(result), 200
+        else:
+            return jsonify({'error': 'ASN not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/asn', methods=['POST'])
+@log_requests
+def get_multiple_asn_info():
+    try:
+        data = request.json
+        results = db.resolve_multiple_asns(data['asns'])
+        return jsonify(results), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
 @app.route('/geolocate/<ip>', methods=['GET'])
 @log_requests
 def geolocate_single_ip(ip):
