@@ -6,9 +6,19 @@ import maxminddb
 class DBHandler:
     db_path:str = str(Path.joinpath(Path(__file__).parent.parent,'db/db.mmdb'));
     reader:maxminddb.Reader
+    db_version: "Unknown"
     def __init__(self):
         self.reader = maxminddb.open_database(self.db_path)
-
+        versionFilePath = str(Path.joinpath(Path(__file__).parent.parent,'current_db_version.txt'));
+        try:
+            with open(versionFilePath, 'r') as f:
+                self.db_version = f.read().strip()
+                print(f"Current Db version : {self.db_version}")
+        except  Exception as e:
+            print(e)
+            self.db_version = "unknown"
+        
+        
         
     def resolve_ip(self, ip):
         ip_ret = {
@@ -21,8 +31,9 @@ class DBHandler:
                 'is_private': False,
                 'asn_name': 'Unknown',
                 'asn_number': 'Unknown',
-                'city_name': 'Unknown'
-                
+                'city_name': 'Unknown',
+                'iso_code': 'Unknown',
+                'db_version': self.db_version
             }
         try:
             ip_ok = ipaddress.ip_address(ip)
@@ -41,6 +52,7 @@ class DBHandler:
                     ip_ret['asn_number'] = ip_data.get('asn_number', 'Unknown')
                     ip_ret['city_name'] = ip_data.get('city_name', 'Unknown')
                     ip_ret['iso_code'] = ip_data.get('iso_code', 'Unknown')
+
                     
                     
 
