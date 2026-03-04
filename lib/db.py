@@ -57,13 +57,7 @@ class DBHandler:
                     ip_ret['city_name'] = ip_data.get('city_name', 'Unknown')
                     ip_ret['iso_code'] = ip_data.get('iso_code', 'Unknown')
 
-                    
-                    
 
-                
-                
-            
-            
         except Exception as e:
             print(e)
         return ip_ret
